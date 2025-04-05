@@ -1,4 +1,8 @@
 ---
+title: "PROJECT_SUMMARY"
+description: "Deep breakdown of the EMINI_ASSASSIN project and all major architectural components."
+
+## 📁 FILE 2: `PROJECT_SUMMARY.md`
 
 ## 📁 FILE 2: `PROJECT_SUMMARY.md`
 
