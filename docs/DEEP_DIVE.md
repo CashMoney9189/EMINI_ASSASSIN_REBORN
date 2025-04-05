@@ -1,3 +1,72 @@
+# 🔍 DEEP DIVE — EMINI_ASSASSIN Internals
+
+This doc walks through internals of each system.
+
+---
+
+## 🧠 DOM Snapshot Engine
+
+**StoreDOMSnapshot()**
+- Captures current L2 state into circular buffer
+- Respects `MAX_SNAPSHOTS`
+
+**ExtractTopOfBook()**
+- Extracts best bid/ask and volumes from snapshot
+
+---
+
+## 📈 TickRecon()
+
+Dynamic tick loop for calculating lookback size. Conditions:
+
+- Break if:
+  - Delta > 200
+  - cumVol > 1000
+  - Price range < 2×SymbolPoint **and** cumVol > 500
+
+---
+
+## 📏 GetAverageDeltaRange()
+
+- Like ATR, but for delta over lookback
+- Used to create adaptive thresholds
+
+---
+
+## 🪤 IsChurnZone()
+
+- Detects compression zones
+- `avgVol > 50` && `avgDelta < 10`
+- Protects against trap zones
+
+---
+
+## 🔫 Signal Tracking
+
+**AddSignalEvent()**
+- Stores trigger delta, price, volume
+- Sets “⏳ PENDING” tag
+- Sends to `LogSignalToCSV()`
+
+**UpdateSignalOutcomes()**
+- Evaluates after N ticks
+- Calculates price follow-through
+- Tags outcomes:
+  - 🔫 KILL_CONFIRMED
+  - 👀 MISSED_KILL
+  - 🪤 TRAPPED
+  - ❌ KILL_ABORTED
+
+---
+
+## 🔥 OutputFormatter
+
+- `FormatSignalRow()` → chart-safe string
+- `GetLatestFormattedSignals()` → HUD display
+
+
+PREVIOUS
+
 # 🧠 EMINI_ASSASSIN Deep Dive
 
 ## 🎯 Purpose
